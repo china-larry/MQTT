@@ -128,7 +128,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>订阅主题</string>
+     <string>发布</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="pub_msg">

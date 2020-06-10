@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui network
+QT       += core gui network serialbus
 QT += core-private
 CONFIG += c++11
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -39,7 +39,11 @@ SOURCES += \
     QtMqtt/qmqttsubscriptionproperties.cpp \
     QtMqtt/qmqtttopicfilter.cpp \
     QtMqtt/qmqtttopicname.cpp \
-    QtMqtt/qmqtttype.cpp
+    QtMqtt/qmqtttype.cpp \
+    CMqttClientThread.cpp \
+    CMqtt2CanThread.cpp \
+    CCanBusDeviceThread.cpp \
+    CAnalyzeCanMsgThread.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -60,7 +64,12 @@ HEADERS += \
     QtMqtt/qmqttsubscriptionproperties.h \
     QtMqtt/qmqtttopicfilter.h \
     QtMqtt/qmqtttopicname.h \
-    QtMqtt/qmqtttype.h
+    QtMqtt/qmqtttype.h \
+    CMqttClientThread.h \
+    CMqtt2CanThread.h \
+    CCanBusDeviceThread.h \
+    configdate.h \
+    CAnalyzeCanMsgThread.h
 
 FORMS += \
         mainwindow.ui

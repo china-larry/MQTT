@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include "QtMqtt/qmqttclient.h"
+#include "CMqttClientThread.h"
+#include "CCanBusDeviceThread.h"
 namespace Ui {
 class MainWindow;
 }
@@ -15,16 +17,16 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+public slots:
+    void SlotSubscribeMsg(const QByteArray &message, const QMqttTopicName &topic);
+    void mqtt_connect_success();
 private slots:
     void on_connect_clicked();
-
-    void mqtt_connect_success();
 
     void mqtt_disconnect();
 
     void mqtt_sub_success(QString topic, quint8 qos = 0);
 
-//    void mqtt_recv_msg(QMQTT::Message msg);
 
     void on_sub_clicked();
 
@@ -32,7 +34,12 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    QMqttClient *m_client;
+//    QThread *m_pMqttThread;
+    QMqttClient *m_pCMqttClientThread;
+//    QMqttClient *m_client;
+    QString m_strReceivedMsg;
+    // can
+    QList<CCanBusDeviceThread*> m_qCanBusDeviceThreadList;
 };
 
 #endif // MAINWINDOW_H

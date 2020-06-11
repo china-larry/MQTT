@@ -1,5 +1,8 @@
 #include "CAnalyzeCanMsgThread.h"
-CAnalyzeCanMsgThread * CAnalyzeCanMsgThread::sm_pInstance = NULL;
+
+#include <QDebug>
+// 饿汉模式，多线程安全
+CAnalyzeCanMsgThread * CAnalyzeCanMsgThread::sm_pInstance = new CAnalyzeCanMsgThread();
 CAnalyzeCanMsgThread::CAnalyzeCanMsgThread()
 {
 
@@ -7,14 +10,14 @@ CAnalyzeCanMsgThread::CAnalyzeCanMsgThread()
 
 CAnalyzeCanMsgThread::~CAnalyzeCanMsgThread()
 {
-
+    if(sm_pInstance != NULL)
+    {
+        delete sm_pInstance;
+        sm_pInstance = NULL;
+    }
 }
 CAnalyzeCanMsgThread *CAnalyzeCanMsgThread::GetInstance()
 {
-    if(NULL == sm_pInstance)
-    {
-        sm_pInstance = new CAnalyzeCanMsgThread();
-    }
     return sm_pInstance;
 }
 void CAnalyzeCanMsgThread::run()

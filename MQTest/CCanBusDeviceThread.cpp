@@ -1,6 +1,7 @@
 #include "CCanBusDeviceThread.h"
 #include <QCanBus>
 #include <QVariant>
+#include <QDebug>
 CCanBusDeviceThread::CCanBusDeviceThread()
 {
     m_pCanBusDevice = NULL;
@@ -19,8 +20,8 @@ void CCanBusDeviceThread::run()
         if(m_qSendPortDataList.count() > 0 && m_iSendTimes > 0)
         {
             m_qPortDataByteArray = m_qSendPortDataList[0];
-            m_qFrameForSend.setPayload(qDataByteArray);
-            if(!m_pCanBusDevice->writeFrame(qFrame))
+            m_qFrameForSend.setPayload(m_qPortDataByteArray);
+            if(!m_pCanBusDevice->writeFrame(m_qFrameForSend))
             {
                 qDebug() << "write fram error" << m_pCanBusDevice->errorString();
             }
@@ -41,7 +42,9 @@ void CCanBusDeviceThread::run()
 
 void CCanBusDeviceThread::SlotReadOneMqttMsg(QString strMsg)
 {
+    qDebug() << "get read one mqtt msg" << strMsg;
     QStringList strMsgList = strMsg.split("//");
+    qDebug() << "str Msg List " << strMsgList;
     // 分拆发送Can
     m_qLockerMutex.lock();
     m_qSendPortDataList.push_back(strMsg.toUtf8());
@@ -90,7 +93,7 @@ bool CCanBusDeviceThread::InitCanBusDevice(const SCanBusDeviceStruct sSCanBusDev
         if (qBitRate.isValid())
         {
             qDebug() << (QString("Backend: %1, connected to %2 at %3 kBit/s")
-                    .arg(m_currentSettings.backendName).arg(m_currentSettings.deviceInterfaceName)
+                    .arg(m_sSCanBusDeviceStruct.strPlugin).arg(m_sSCanBusDeviceStruct.strInterfaceName)
                     .arg(qBitRate.toInt()/1000));
             return true;
         }

@@ -3,7 +3,6 @@
 #include <QThread>
 #include <QCanBus>
 #include "CMqtt2CanThread.h"
-
 #include "CAnalyzeCanMsgThread.h"
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -20,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent) :
             this, &MainWindow::SlotSubscribeMsg);
     // can 线程开启
     QList<QCanBusDeviceInfo> qCanBusInterfacesList = QCanBus::instance()->availableDevices("socketcan");
+    qDebug() << "qCanBusInterfacesList count" << qCanBusInterfacesList.count();
     for (const QCanBusDeviceInfo &info : qAsConst(qCanBusInterfacesList))
     {
         CCanBusDeviceThread *pCCanBusDeviceThread = new CCanBusDeviceThread();
@@ -44,18 +44,18 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::SlotSubscribeMsg(const QByteArray &message,
-                                  const QMqttTopicName &topic)
+void MainWindow::SlotSubscribeMsg(const QByteArray &kqMessageByteArray,
+                                  const QMqttTopicName &kqTopicName)
 {
     m_strReceivedMsg = QDateTime::currentDateTime().toString("yyyy-MM-dd:hh:mm:ss")
                 + QLatin1String(" Received Topic: ")
-                + topic.name()
+                + kqTopicName.name()
                 + QLatin1String(" Message: ")
-                + message
+                + kqMessageByteArray
                 + QLatin1Char('\n');
     ui->textBrowser->insertPlainText(m_strReceivedMsg);
 
-    CMqtt2CanThread::GetInstance()->AddSubscribeMsg(m_strReceivedMsg);
+    CMqtt2CanThread::GetInstance()->AddSubscribeMsg(kqTopicName.name() + "/" + kqMessageByteArray);
 }
 
 void MainWindow::on_connect_clicked()
@@ -94,6 +94,10 @@ void MainWindow::mqtt_sub_success(QString topic, quint8 qos)
 void MainWindow::on_sub_clicked()
 {
     m_pCMqttClientThread->subscribe(ui->sub_topic->text(), 0);
+    QString msg = "订阅主题 ";
+       msg += ui->sub_topic->text();
+       msg += " 成功\n";
+       ui->textBrowser->append(msg);
 }
 
 void MainWindow::on_pub_clicked()

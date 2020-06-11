@@ -18,7 +18,7 @@ public:
     ~MainWindow();
 
 public slots:
-    void SlotSubscribeMsg(const QByteArray &message, const QMqttTopicName &topic);
+    void SlotSubscribeMsg(const QByteArray &kqMessageByteArray, const QMqttTopicName &kqTopicName);
     void mqtt_connect_success();
 private slots:
     void on_connect_clicked();

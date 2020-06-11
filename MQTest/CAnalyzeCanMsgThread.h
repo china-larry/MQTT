@@ -18,7 +18,7 @@ protected:
 public slots:
     void SlotReadCanMsg(QByteArray qCanMsg);
 public:
-    CAnalyzeCanMsgThread* GetInstance();
+    static CAnalyzeCanMsgThread* GetInstance();
 private:
     static CAnalyzeCanMsgThread *sm_pInstance;
     QMutex m_qLockerMutex;

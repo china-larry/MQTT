@@ -18,7 +18,7 @@ protected:
 signals:
     void SignalOneSubscribeMsg(QString strMsg);
 public:
-    CMqtt2CanThread* GetInstance();
+    static CMqtt2CanThread* GetInstance();
     //
     void AddSubscribeMsg(QString strMsg);
 private:
